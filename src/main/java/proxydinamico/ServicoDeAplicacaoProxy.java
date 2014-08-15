@@ -1,6 +1,7 @@
 package proxydinamico;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -28,11 +29,11 @@ public class ServicoDeAplicacaoProxy implements InvocationHandler {
 				n = method.invoke(obj, args);			
 			}
 			transacao.finalizar();
-		} catch(Exception e) {
+		} catch(InvocationTargetException e) {
 			transacao.desfazer();
-			throw new Exception(e);
+			throw e.getTargetException();
 		}
-		return n == null ? null : n;
+		return n;
 	}
 
 }
